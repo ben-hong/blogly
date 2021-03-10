@@ -1,6 +1,6 @@
 """Blogly application."""
 
-from flask import Flask
+from flask import Flask, request, redirect, render_template
 from models import db, connect_db
 
 app = Flask(__name__)
@@ -10,3 +10,13 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 connect_db(app)
 db.create_all()
+
+from flask_debugtoolbar import DebugToolbarExtension
+app.config['SECRET_KEY'] = "SECRET!"
+debug = DebugToolbarExtension(app)
+
+@app.route("/")
+def index():
+    """ Loads Home Page """
+
+    return render_template("users.html")
