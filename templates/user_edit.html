@@ -3,5 +3,14 @@
 {% block title %} Edit User {% endblock %}
 
 {% block content %}
+<h2>Edit User</h2>
+<form method="POST" action="/user/">
+  <p>First Name:     <input name="fname" value="{{user.first_name}}"></p>
+  <p>Last Name:  <input name="lname" value="{{user.last_name}}"></p>
+  <p>Image URL:   <input name="imgURL" value="{{user.image_url}}"></p>
+  <input name="id" value="{{user.id}}" style="display: none;">
+  <a href="/user/{{user.id}}"><button>Cancel</button></a>
+  <button type="submit">Save</button>
+</form>
 
 {% endblock %}
