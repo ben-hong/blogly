@@ -42,18 +42,18 @@ def make_user():
 
     return redirect("/")
 
-@app.route("/<int:BlogUser_id>")
+@app.route("/user/<int:BlogUser_id>")
 def user_page(BlogUser_id):
     """Show info on a single user."""
     user = BlogUser.query.get_or_404(BlogUser_id)
     posts = user.posts
     return render_template("user_details.html", user=user, posts=posts)
 
-@app.route("/user/<int:userID>/edit")
-def user_edit(userID):
+@app.route("/user/<int:user_id>/edit")
+def user_edit(user_id):
     """Edit a single user."""
 
-    user = BlogUser.query.get_or_404(userID)
+    user = BlogUser.query.get_or_404(user_id)
     return render_template("user_edit.html", user=user)
 
 
@@ -75,30 +75,62 @@ def save_edit():
 
     return redirect("/")
 
-@app.route("/delete/<int:userID>")
-def user_delete(userID):
+@app.route("/delete/<int:user_id>")
+def user_delete(user_id):
     """Delete a single user."""
 
-    user = BlogUser.query.get_or_404(userID)
+    user = BlogUser.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
 
     return redirect("/")
 
-@app.route("/users/<int:userID>/posts/new", methods=["GET", "POST"])
-def user_add_post(userID):
+@app.route("/users/<int:user_id>/posts/new", methods=["GET", "POST"])
+def user_add_post(user_id):
     """Creates Form to add post"""
-    user = BlogUser.query.get_or_404(userID)
+    user = BlogUser.query.get_or_404(user_id)
     if request.method == "POST":
         title = request.form["title"]
         content = request.form["content"]
-        new_post = Post(title=title, content=content, user_id=userID)
+        new_post = Post(title=title, content=content, user_id=user_id)
         db.session.add(new_post)
         db.session.commit()
-        return redirect(f"/{userID}")
+        return redirect(f"/user/{user_id}")
     else:
         return render_template("new_post_form.html", user=user)
 
-# @app.route("/posts/<int:userID>")
+@app.route("/posts/<int:post_id>")
+def post_detail(post_id):
+    """Display details of a single post. """
+    post = Post.query.get_or_404(post_id)
+    user = post.author
+    return render_template("post_detail.html", post = post, user = user)
 
+
+@app.route("/posts/<int:post_id>/edit", methods=["GET", "POST"])
+def edit_post(post_id):
+    """ Edit a single post. """
+
+    post = Post.query.get_or_404(post_id)
+
+    if request.method == "POST":
+            post.title = request.form["title"]
+            post.content = request.form["content"]
+
+            db.session.commit()
+            return redirect(f"/posts/{post_id}")    
+    else:
+        return render_template("post_edit.html", post = post)
+
+
+@app.route("/posts/<int:post_id>/delete", methods=["POST"])
+def delete_post(post_id):
+    """Delete a single post. """
+
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user_id
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f"/user/{user_id}")
 

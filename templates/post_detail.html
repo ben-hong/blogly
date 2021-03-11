@@ -7,7 +7,9 @@
 
 <p>{{post.content}}</p>
 <h4>By {{user.full_name()}}</h4>
-<a href="/{{user.id}}">Cancel</a>
-<a href="">Edit</a>
-<a href="">Delete</a>
+<a href="/user/{{user.id}}">Cancel</a>
+<a href="/posts/{{post.id}}/edit">Edit</a>
+<form action="/posts/{{post.id}}/delete" method="POST">
+<button>Delete</button>
+</form>
 {% endblock %}
