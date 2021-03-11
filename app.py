@@ -34,12 +34,7 @@ def make_user():
     """ Post request to create new user """
     first_name = request.form["fname"]
     last_name = request.form["lname"]
-    pic = request.form["imgURL"]
-
-    if pic:
-        pic = pic
-    else:
-        pic = None
+    pic = request.form["imgURL"] or None
 
     blog_user = BlogUser(first_name=first_name, last_name=last_name, image_url=pic)
     db.session.add(blog_user)
@@ -67,15 +62,10 @@ def save_edit():
     """Save single user edit."""
     first_name = request.form["fname"]
     last_name = request.form["lname"]
-    pic = request.form["imgURL"]
+    pic = request.form["imgURL"] or None
     user_id = request.form["id"]
-
-    if pic:
-        pic = pic
-    else:
-        pic = None
     
-    user = BlogUser.query.get(user_id)
+    user = BlogUser.query.get_or_404(user_id)
 
     user.first_name = first_name 
     user.last_name = last_name
@@ -89,7 +79,7 @@ def save_edit():
 def user_delete(userID):
     """Delete a single user."""
 
-    user = BlogUser.query.get(userID)
+    user = BlogUser.query.get_or_404(userID)
     db.session.delete(user)
     db.session.commit()
 
