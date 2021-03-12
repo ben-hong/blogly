@@ -20,7 +20,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 def index():
     """ Loads Home Page """
     users = BlogUser.query.all()
-    return render_template("users.html", users = users)
+    tags = Tag.query.all()
+    return render_template("users.html", users = users, tags = tags)
 
 @app.route("/users/new")
 def user_form():
@@ -134,3 +135,24 @@ def delete_post(post_id):
 
     return redirect(f"/user/{user_id}")
 
+
+@app.route("/tags/new", methods=["GET", "POST"])
+def new_tag():
+    """Adds a tag or displays the add tag form. """
+
+    if request.method == "POST":
+            tag_name = request.form["tag_name"]
+            new_tag = Tag(name=tag_name)
+            db.session.add(new_tag)
+            db.session.commit()
+            return redirect(f"/")    
+    else:
+        return render_template("create_tag.html")
+
+
+@app.route("/tags/<int:tag_id>")
+def tag_detail(tag_id):
+    """Display details of a single tag. """
+    tag = Tag.query.get_or_404(tag_id)
+
+    return render_template("create_tag.html", tag = tag)

@@ -65,12 +65,13 @@ class BlogglyAppTestCase(TestCase):
         with self.client as client:
             post = Post.query.filter_by(title='Test Title').first()
             post_id = post.id
+            self.assertIsNotNone(post)
             response = client.post(f'/posts/{post_id}/delete')
             html = response.get_data(as_text=True)
 
-            post = Post.query.filter_by(title='Test Title').first()
+            post = Post.query.filter_by(title='Test Title').get(post_id)
             self.assertEqual(response.status_code, 302)
-            self.assertNotEqual(post.id, post_id)
+            self.assertIsNone(post)
 
 
 

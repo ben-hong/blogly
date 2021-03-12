@@ -51,9 +51,7 @@ class Post(db.Model):
     )
 
     author = db.relationship('BlogUser')
-    # post_tag = db.relationship('PostTag')
-    tags = db.relationship('Tag',
-                            secondary='posts_tags')
+    
     
 
 class Tag(db.Model):
@@ -68,7 +66,12 @@ class Tag(db.Model):
                     nullable=False,
                     unique=True)
     
-    post_tag = db.relationship('PostTag')
+    posts = db.relationship(
+        'Post',
+        secondary="posts_tags",
+        #cascade="all,delete",
+        backref="tags",
+    )
 
 class PostTag(db.Model):
     """PostTag"""

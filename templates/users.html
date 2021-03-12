@@ -14,4 +14,14 @@
 <div>
   <a href="/users/new"><button>Add User</button></a>
   </div>
+
+  <div id="tag-div">
+    <h2>Tags</h2>
+    <ul>
+      {%for tag in tags%}
+      <li><a href="">{{tag.name}}</a></li>
+      {% endfor %}
+    </ul>
+    <a href="/tags/new">Add Tag</a>
+  </div>
 {% endblock %}
