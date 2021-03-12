@@ -49,5 +49,38 @@ class Post(db.Model):
         db.Integer,
         db.ForeignKey('users.id', ondelete='CASCADE')
     )
-    
+
     author = db.relationship('BlogUser')
+    # post_tag = db.relationship('PostTag')
+    tags = db.relationship('Tag',
+                            secondary='posts_tags')
+    
+
+class Tag(db.Model):
+    """Tag"""
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer,
+                    primary_key=True,
+                    autoincrement=True)
+    name = db.Column(db.String(20),
+                    nullable=False,
+                    unique=True)
+    
+    post_tag = db.relationship('PostTag')
+
+class PostTag(db.Model):
+    """PostTag"""
+    __tablename__ = "posts_tags"
+
+    id = db.Column(db.Integer,
+                    primary_key=True,
+                    autoincrement=True)
+    post_id = db.Column(db.Integer,
+                       db.ForeignKey("posts.id"),
+                       primary_key=True)
+    tag_id = db.Column(db.Integer,
+                          db.ForeignKey("tags.id"),
+                          primary_key=True)
+    
